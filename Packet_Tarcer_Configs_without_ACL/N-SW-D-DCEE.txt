@@ -1,0 +1,116 @@
+N-SW-D-DCEE
+
+Switch>enable
+Switch#conf t
+Switch(config)#hostname SW-D-DCEE
+
+SW-D-DCEE(config)#vlan 20
+SW-D-DCEE(config-vlan)#name VLAN-DCEE
+SW-D-DCEE(config-vlan)#exit
+
+SW-D-DCEE(config)#vlan 99
+SW-D-DCEE(config-vlan)#name VLAN-MGMT
+SW-D-DCEE(config-vlan)#exit
+
+SW-D-DCEE(config)#vlan 100
+SW-D-DCEE(config-vlan)#name NATIVE-VLAN
+SW-D-DCEE(config-vlan)#exit
+
+SW-D-DCEE(config)#interface vlan 99
+SW-D-DCEE(config-if)#description VLAN-MGMT
+SW-D-DCEE(config-if)#ip address 10.99.99.12 255.255.255.0
+SW-D-DCEE(config-if)#no shut
+SW-D-DCEE(config-if)#exit
+
+SW-D-DCEE(config)#ip default-gateway 10.99.99.1
+
+SW-D-DCEE(config)#interface GigabitEthernet 1/0/1
+SW-D-DCEE(config-if)#description SW-CORE-Link
+SW-D-DCEE(config-if)#switchport mode trunk
+SW-D-DCEE(config-if)#switchport trunk native vlan 100
+SW-D-DCEE(config-if)#switchport trunk allowed vlan 20,99,100
+SW-D-DCEE(config-if)#no shutdown
+SW-D-DCEE(config-if)#exit
+
+SW-D-DCEE(config)#interface GigabitEthernet 1/0/2
+SW-D-DCEE(config-if)#description SW-A-DCEE-Trunk
+SW-D-DCEE(config-if)#switchport mode trunk
+SW-D-DCEE(config-if)#switchport trunk native vlan 100
+SW-D-DCEE(config-if)#switchport trunk allowed vlan 20,99,100
+SW-D-DCEE(config-if)#no shutdown
+SW-D-DCEE(config-if)#exit
+
+SW-D-DCEE(config)#username admin secret admin@1234
+SW-D-DCEE(config)#ip domain-name uor.lk
+SW-D-DCEE(config)#ip ssh version 2
+SW-D-DCEE(config)#crypto key generate rsa
+1024
+SW-D-DCEE(config)#service password-encryption
+
+SW-D-DCEE(config)#line vty 0 4
+SW-D-DCEE(config-line)#login local
+SW-D-DCEE(config-line)#exec-timeout 10
+SW-D-DCEE(config-line)#transport input ssh
+SW-D-DCEE(config-line)#exit
+SW-D-DCEE(config)#exit
+
+SW-D-DCEE#write
+
+
+-----------------------------
+
+enable
+configure terminal
+hostname SW-D-DCEE
+
+vlan 20
+name VLAN-DCEE
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.12 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet 1/0/1
+description SW-CORE-Link
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 20,99,100
+no shutdown
+exit
+
+interface GigabitEthernet 1/0/2
+description SW-A-DCEE-Trunk
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 20,99,100
+no shutdown
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory

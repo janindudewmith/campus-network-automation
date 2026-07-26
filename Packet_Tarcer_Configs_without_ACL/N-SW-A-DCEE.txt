@@ -1,0 +1,141 @@
+N-SW-A-DCEE
+
+Switch>enable
+Switch#conf t
+Switch(config)#hostname SW-A-DCEE
+
+SW-A-DCEE(config)#vlan 20
+SW-A-DCEE(config-vlan)#name VLAN-DCEE
+SW-A-DCEE(config-vlan)#exit
+
+SW-A-DCEE(config)#vlan 99
+SW-A-DCEE(config-vlan)#name VLAN-MGMT
+SW-A-DCEE(config-vlan)#exit
+
+SW-A-DCEE(config)#vlan 100
+SW-A-DCEE(config-vlan)#name NATIVE-VLAN
+SW-A-DCEE(config-vlan)#exit
+
+SW-A-DCEE(config)#interface vlan 99
+SW-A-DCEE(config-if)#description MGMT
+SW-A-DCEE(config-if)#ip address 10.99.99.22 255.255.255.0
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+
+SW-A-DCEE(config)#ip default-gateway 10.99.99.1
+
+SW-A-DCEE(config)#interface GigabitEthernet 0/1
+SW-A-DCEE(config-if)#description SW-D-DCEE-Trunk
+SW-A-DCEE(config-if)#switchport trunk encapsulation dot1Q
+SW-A-DCEE(config-if)#switchport mode trunk
+SW-A-DCEE(config-if)#switchport trunk native vlan 100
+SW-A-DCEE(config-if)#switchport trunk allowed vlan 20,99,100
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+
+SW-A-DCEE(config)#interface fastEthernet 0/1
+SW-A-DCEE(config-if)#description DCEE-PC1
+SW-A-DCEE(config-if)#switchport mode access
+SW-A-DCEE(config-if)#switchport access vlan 20
+SW-A-DCEE(config-if)#spanning-tree portfast
+SW-A-DCEE(config-if)#spanning-tree bpduguard enable
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+
+SW-A-DCEE(config)#interface fastEthernet 0/2
+SW-A-DCEE(config-if)#description DCEE-PC2
+SW-A-DCEE(config-if)#switchport mode access
+SW-A-DCEE(config-if)#switchport access vlan 20
+SW-A-DCEE(config-if)#spanning-tree portfast
+SW-A-DCEE(config-if)#spanning-tree bpduguard enable
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+
+SW-A-DCEE(config)#username admin secret admin@1234
+SW-A-DCEE(config)#ip domain-name uor.lk
+SW-A-DCEE(config)#ip ssh version 2
+SW-A-DCEE(config)#crypto key generate rsa
+1024
+SW-A-DCEE(config)#service password-encryption
+
+SW-A-DCEE(config)#line vty 0 4
+SW-A-DCEE(config-line)#login local
+SW-A-DCEE(config-line)#exec-timeout 10
+SW-A-DCEE(config-line)#transport input ssh
+SW-A-DCEE(config-line)#exit
+SW-A-DCEE(config)#exit
+
+SW-A-DCEE#write
+
+-----------------------------------------------------
+
+
+enable
+configure terminal
+hostname SW-A-DCEE
+
+vlan 20
+name VLAN-DCEE
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.22 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet 0/1
+description SW-D-DCEE-Trunk
+switchport trunk encapsulation dot1Q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 20,99,100
+no shutdown
+exit
+
+interface fastEthernet 0/1
+description DCEE-PC1
+switchport mode access
+switchport access vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/2
+description DCEE-PC2
+switchport mode access
+switchport access vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+
+

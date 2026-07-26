@@ -1,0 +1,44 @@
+N-ISP-Router
+
+Router>enable
+Router#configure terminal
+Router(config)#hostname ISP-Router
+
+ISP-Router(config)#interface gigabitEthernet 0/0/0
+ISP-Router(config-if)#description ISP-SW
+ISP-Router(config-if)#ip address 8.8.8.1 255.255.255.0
+ISP-Router(config-if)#no shutdown 
+ISP-Router(config-if)#exit
+
+ISP-Router(config)#interface serial 0/1/1
+ISP-Router(config-if)#description R-EDGE-Link
+ISP-Router(config-if)#ip address 200.200.200.1 255.255.255.252
+ISP-Router(config-if)#no shutdown
+ISP-Router(config-if)#exit
+
+ISP-Router(config)#end
+ISP-Router#copy running-config startup-config
+
+
+------Already put-------------
+
+
+enable
+configure terminal
+hostname ISP-Router
+
+interface GigabitEthernet 0/0/0
+description ISP-SW
+ip address 8.8.8.1 255.255.255.0
+no shutdown
+exit
+
+interface Serial 0/1/1
+description R-EDGE-Link
+ip address 200.200.200.1 255.255.255.252
+no shutdown
+exit
+
+end
+write memory
+

@@ -1,0 +1,138 @@
+N-SW-A-DEIE
+
+Switch>enable
+Switch#configure terminal
+Switch(config)#hostname SW-A-DEIE
+
+SW-A-DEIE(config)#vlan 10
+SW-A-DEIE(config-vlan)#name VLAN-DEIE
+SW-A-DEIE(config-vlan)#exit
+
+SW-A-DEIE(config)#vlan 99
+SW-A-DEIE(config-vlan)#name VLAN-MGMT
+SW-A-DEIE(config-vlan)#exit
+
+SW-A-DEIE(config)#vlan 100
+SW-A-DEIE(config-vlan)#name NATIVE-VLAN
+SW-A-DEIE(config-vlan)#exit
+
+SW-A-DEIE(config)#interface vlan 99
+SW-A-DEIE(config-if)#description VLAN-MGMT
+SW-A-DEIE(config-if)#ip address 10.99.99.21 255.255.255.0
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+
+SW-A-DEIE(config)#ip default-gateway 10.99.99.1
+
+SW-A-DEIE(config)#interface GigabitEthernet 0/1
+SW-A-DEIE(config-if)#description SW-D-DEIE-Trunk
+SW-A-DEIE(config-if)#switchport trunk encapsulation dot1Q
+SW-A-DEIE(config-if)#switchport mode trunk
+SW-A-DEIE(config-if)#switchport trunk native vlan 100
+SW-A-DEIE(config-if)#switchport trunk allowed vlan 10,99,100 
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+
+SW-A-DEIE(config)#interface fastEthernet 0/1
+SW-A-DEIE(config-if)#description DEIE-PC1
+SW-A-DEIE(config-if)#switchport mode access
+SW-A-DEIE(config-if)#switchport access vlan 10
+SW-A-DEIE(config-if)#spanning-tree portfast
+SW-A-DEIE(config-if)#spanning-tree bpduguard enable
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+
+SW-A-DEIE(config)#interface fastEthernet 0/2
+SW-A-DEIE(config-if)#description DEIE-PC2
+SW-A-DEIE(config-if)#switchport mode access
+SW-A-DEIE(config-if)#switchport access vlan 10
+SW-A-DEIE(config-if)#spanning-tree portfast
+SW-A-DEIE(config-if)#spanning-tree bpduguard enable
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+
+SW-A-DEIE(config)#username admin secret admin@1234
+SW-A-DEIE(config)#ip domain-name uor.lk
+SW-A-DEIE(config)#ip ssh version 2
+SW-A-DEIE(config)#crypto key generate rsa
+1024
+SW-A-DEIE(config)#service password-encryption
+
+SW-A-DEIE(config)#line vty 0 4
+SW-A-DEIE(config-line)#login local
+SW-A-DEIE(config-line)#exec-timeout 10
+SW-A-DEIE(config-line)#transport input ssh
+SW-A-DEIE(config-line)#exit
+SW-A-DEIE(config)#exit
+
+SW-A-DEIE#write
+
+
+------------
+
+enable
+configure terminal
+hostname SW-A-DEIE
+
+vlan 10
+name VLAN-DEIE
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.21 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet 0/1
+description SW-D-DEIE-Trunk
+switchport trunk encapsulation dot1Q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 10,99,100 
+no shutdown
+exit
+
+interface fastEthernet 0/1
+description DEIE-PC1
+switchport mode access
+switchport access vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/2
+description DEIE-PC2
+switchport mode access
+switchport access vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory

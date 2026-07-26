@@ -1,0 +1,90 @@
+N-R-CORE
+
+Router#configure terminal
+Router(config)#hostname R-CORE
+
+R-CORE(config)#interface Loopback0
+R-CORE(config-if)#ip address 10.255.255.2 255.255.255.255
+R-CORE(config-if)#exit
+
+R-CORE(config)#interface serial 0/1/0
+R-CORE(config-if)#description R-EDGE-Link
+R-CORE(config-if)#ip address 10.255.0.2 255.255.255.252
+R-CORE(config-if)#no shutdown
+R-CORE(config-if)#exit
+
+R-CORE(config)#interface GigabitEthernet 0/0/0
+R-CORE(config-if)#description SW-CORE-Link
+R-CORE(config-if)#ip address 10.255.0.5 255.255.255.252
+R-CORE(config-if)#no shutdown
+R-CORE(config-if)#exit
+
+R-CORE(config)#router ospf 1
+R-CORE(config-router)#router-id 2.2.2.2
+R-CORE(config-router)#network 10.255.0.0 0.0.0.3 area 0
+R-CORE(config-router)#network 10.255.0.4 0.0.0.3 area 0
+R-CORE(config-router)#network 10.255.255.2 0.0.0.0 area 0
+R-CORE(config-router)#exit
+R-CORE(config)#exit
+
+
+R-CORE(config)#username admin secret admin@1234
+R-CORE(config)#ip domain-name uor.lk
+R-CORE(config)#ip ssh version 2
+R-CORE(config)#crypto key generate rsa
+1024
+R-CORE(config)#service password-encryption
+
+R-CORE(config)#line vty 0 4
+R-CORE(config-line)#login local
+R-CORE(config-line)#exec-timeout 10
+R-CORE(config-line)#transport input ssh
+R-CORE(config-line)#exit
+R-CORE(config)#exit
+
+R-CORE#write
+
+------------------------------------
+
+enable
+configure terminal
+hostname R-CORE
+
+interface Loopback0
+ip address 10.255.255.2 255.255.255.255
+exit
+
+interface Serial 0/1/0
+description R-EDGE-Link
+ip address 10.255.0.2 255.255.255.252
+no shutdown
+exit
+
+interface GigabitEthernet 0/0/0
+description SW-CORE-Link
+ip address 10.255.0.5 255.255.255.252
+no shutdown
+exit
+
+router ospf 1
+router-id 2.2.2.2
+network 10.255.0.0 0.0.0.3 area 0
+network 10.255.0.4 0.0.0.3 area 0
+network 10.255.255.2 0.0.0.0 area 0
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory

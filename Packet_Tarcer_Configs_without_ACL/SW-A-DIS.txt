@@ -1,0 +1,176 @@
+SW-A-DIS
+
+Switch>enable
+Switch#conf t
+Switch(config)#hostname SW-A-DIS
+
+SW-A-DIS(config)#vlan 40
+SW-A-DIS(config-vlan)#name VLAN-DIS
+SW-A-DIS(config-vlan)#exit
+
+SW-A-DIS(config)#vlan 99
+SW-A-DIS(config-vlan)#name VLAN-MGMT
+SW-A-DIS(config-vlan)#exit
+
+SW-A-DIS(config)#vlan 100
+SW-A-DIS(config-vlan)#name NATIVE-VLAN
+SW-A-DIS(config-vlan)#exit
+
+SW-A-DIS(config)#interface vlan 99
+SW-A-DIS(config-if)#description VLAN-MGMT
+SW-A-DIS(config-if)#ip address 10.99.99.24 255.255.255.0
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+
+SW-A-DIS(config)#ip default-gateway 10.99.99.1
+
+SW-A-DIS(config)#interface GigabitEthernet 0/1
+SW-A-DIS(config-if)#description SW-CORE-Trunk
+SW-A-DIS(config-if)#switchport trunk encapsulation dot1Q
+SW-A-DIS(config-if)#switchport mode trunk
+SW-A-DIS(config-if)#switchport trunk native vlan 100
+SW-A-DIS(config-if)#switchport trunk allowed vlan 40,99,100
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+
+SW-A-DIS(config)#interface fastEthernet 0/1
+SW-A-DIS(config-if)#description DIS-PC1
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+
+SW-A-DIS(config)#interface fastEthernet 0/2
+SW-A-DIS(config-if)#description DIS-PC2
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+
+SW-A-DIS(config)#interface fastEthernet 0/3
+SW-A-DIS(config-if)#description DHCP/WEB
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+
+SW-A-DIS(config)#interface fastEthernet 0/4
+SW-A-DIS(config-if)#description DNS
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+
+SW-A-DIS(config)#username admin secret admin@1234
+SW-A-DIS(config)#ip domain-name uor.lk
+SW-A-DIS(config)#ip ssh version 2
+SW-A-DIS(config)#crypto key generate rsa
+1024
+SW-A-DIS(config)#service password-encryption
+
+SW-A-DIS(config)#line vty 0 4
+SW-A-DIS(config-line)#login local
+SW-A-DIS(config-line)#exec-timeout 10
+SW-A-DIS(config-line)#transport input ssh
+SW-A-DIS(config-line)#exit
+SW-A-DIS(config)#
+
+SW-A-DIS(config)#exit
+SW-A-DIS#write
+
+
+----------------------------------------
+
+
+enable
+configure terminal
+hostname SW-A-DIS
+
+vlan 40
+name VLAN-DIS
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.24 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet 0/1
+description SW-CORE-Trunk
+switchport trunk encapsulation dot1Q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 40,99,100
+no shutdown
+exit
+
+interface fastEthernet 0/1
+description DIS-PC1
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/2
+description DIS-PC2
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/3
+description DHCP/WEB
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/4
+description DNS
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory

@@ -1,0 +1,282 @@
+N-SW-CORE
+
+Switch>enable
+Switch#configure terminal
+Switch(config)#hostname SW-CORE
+
+SW-CORE(config)#ip routing
+SW-CORE(config)#interface GigabitEthernet 1/0/1
+SW-CORE(config-if)#description R-CORE-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.6 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+
+SW-CORE(config)#vlan 10
+SW-CORE(config-vlan)#name VLAN_DEIE
+SW-CORE(config-vlan)#exit
+
+SW-CORE(config)#vlan 20
+SW-CORE(config-vlan)#name VLAN_DCEE
+SW-CORE(config-vlan)#exit
+
+SW-CORE(config)#vlan 30
+SW-CORE(config-vlan)#name VLAN_DMME
+SW-CORE(config-vlan)#exit
+
+SW-CORE(config)#vlan 40
+SW-CORE(config-vlan)#name VLAN_DIS
+SW-CORE(config-vlan)#exit
+
+SW-CORE(config)#vlan 99
+SW-CORE(config-vlan)#name VLAN_MGMT
+SW-CORE(config-vlan)#exit
+
+SW-CORE(config)#vlan 100
+SW-CORE(config-vlan)#name NATIVE-VLAN
+SW-CORE(config-vlan)#exit
+
+SW-CORE(config)#interface Vlan 10
+SW-CORE(config-if)#description VLAN-DEIE
+SW-CORE(config-if)#ip helper-address 10.10.40.2
+SW-CORE(config-if)#ip address 10.10.10.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#interface Vlan 20
+SW-CORE(config-if)#description VLAN-DCEE
+SW-CORE(config-if)#ip helper-address 10.10.40.2
+SW-CORE(config-if)#ip address 10.10.20.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#interface Vlan 30
+SW-CORE(config-if)#description VLAN-DMME
+SW-CORE(config-if)#ip helper-address 10.10.40.2
+SW-CORE(config-if)#ip address 10.10.30.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#interface Vlan 40
+SW-CORE(config-if)#description VLAN-DIS
+SW-CORE(config-if)#ip helper-address 10.10.40.2
+SW-CORE(config-if)#ip address 10.10.40.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#interface Vlan 99
+SW-CORE(config-if)#description VLAN-MGMT
+SW-CORE(config-if)#ip address 10.99.99.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#exit
+SW-CORE#write
+
+
+SW-CORE(config)#interface GigabitEthernet 1/0/2
+SW-CORE(config-if)#description SW-D-DEIE-Trunk
+SW-CORE(config-if)#switchport mode trunk
+SW-CORE(config-if)#switchport trunk native vlan 100
+SW-CORE(config-if)#switchport trunk allowed vlan 10,99,100
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#interface GigabitEthernet 1/0/3
+SW-CORE(config-if)#description SW-D-DCEE-Trunk
+SW-CORE(config-if)#switchport mode trunk
+SW-CORE(config-if)#switchport trunk native vlan 100
+SW-CORE(config-if)#switchport trunk allowed vlan 20,99,100
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#interface GigabitEthernet 1/0/4
+SW-CORE(config-if)#description SW-D-DMME-Trunk
+SW-CORE(config-if)#switchport mode trunk
+SW-CORE(config-if)#switchport trunk native vlan 100
+SW-CORE(config-if)#switchport trunk allowed vlan 30,99,100
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#interface GigabitEthernet 1/0/5
+SW-CORE(config-if)#description SW-A-DIS-Trunk
+SW-CORE(config-if)#switchport mode trunk
+SW-CORE(config-if)#switchport trunk native vlan 100
+SW-CORE(config-if)#switchport trunk allowed vlan 40,99,100
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+
+
+SW-CORE(config)#interface Loopback0
+SW-CORE(config-if)#ip address 10.255.255.3 255.255.255.255
+SW-CORE(config-if)#exit
+
+SW-CORE(config)#router ospf 1
+SW-CORE(config-router)#router-id 3.3.3.3
+SW-CORE(config-router)#network 10.255.0.4 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.10.10.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.10.20.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.10.30.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.10.40.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.99.99.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.255.255.3 0.0.0.0 area 0
+SW-CORE(config-router)#exit
+
+
+SW-CORE(config)#username admin secret admin@1234
+SW-CORE(config)#ip domain-name uor.lk
+SW-CORE(config)#ip ssh version 2
+SW-CORE(config)#crypto key generate rsa
+1024
+SW-CORE(config)#service password-encryption
+
+SW-CORE(config)#line vty 0 15
+SW-CORE(config-line)#login local
+SW-CORE(config-line)#exec-timeout 10
+SW-CORE(config-line)#transport input ssh
+SW-CORE(config-line)#exit
+SW-CORE(config)#exit
+
+SW-CORE#write
+
+--------------------
+
+enable
+configure terminal
+hostname SW-CORE
+
+ip routing
+interface GigabitEthernet 1/0/1
+description R-CORE-Link
+no switchport
+ip address 10.255.0.6 255.255.255.252
+no shutdown
+exit
+
+vlan 10
+name VLAN_DEIE
+exit
+
+vlan 20
+name VLAN_DCEE
+exit
+
+vlan 30
+name VLAN_DMME
+exit
+
+vlan 40
+name VLAN_DIS
+exit
+
+vlan 99
+name VLAN_MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface Vlan 10
+description VLAN-DEIE
+ip helper-address 10.10.40.2
+ip address 10.10.10.1 255.255.255.0
+no shutdown
+exit
+
+interface Vlan 20
+description VLAN-DCEE
+ip helper-address 10.10.40.2
+ip address 10.10.20.1 255.255.255.0
+no shutdown
+exit
+
+interface Vlan 30
+description VLAN-DMME
+ip helper-address 10.10.40.2
+ip address 10.10.30.1 255.255.255.0
+no shutdown
+exit
+
+interface Vlan 40
+description VLAN-DIS
+ip helper-address 10.10.40.2
+ip address 10.10.40.1 255.255.255.0
+no shutdown
+exit
+
+interface Vlan 99
+description VLAN-MGMT
+ip address 10.99.99.1 255.255.255.0
+no shutdown
+exit
+
+interface GigabitEthernet 1/0/2
+description SW-D-DEIE-Trunk
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 10,99,100
+no shutdown
+exit
+
+interface GigabitEthernet 1/0/3
+description SW-D-DCEE-Trunk
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 20,99,100
+no shutdown
+exit
+
+interface GigabitEthernet 1/0/4
+description SW-D-DMME-Trunk
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 30,99,100
+no shutdown
+exit
+
+interface GigabitEthernet 1/0/5
+description SW-A-DIS-Trunk
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 40,99,100
+no shutdown
+exit
+
+interface Loopback0
+ip address 10.255.255.3 255.255.255.255
+exit
+
+router ospf 1
+router-id 3.3.3.3
+network 10.255.0.4 0.0.0.3 area 0
+network 10.10.10.0 0.0.0.255 area 0
+network 10.10.20.0 0.0.0.255 area 0
+network 10.10.30.0 0.0.0.255 area 0
+network 10.10.40.0 0.0.0.255 area 0
+network 10.99.99.0 0.0.0.255 area 0
+network 10.255.255.3 0.0.0.0 area 0
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 15
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+
+exit
+write memory
+
+------------------------------------------------
+
+security password min-length 10
+login block-for 600 attempts 3 within 60
+
