@@ -1,0 +1,134 @@
+G_R-CORE
+
+enable
+configure terminal
+hostname R-CORE
+
+interface Loopback0
+ip address 10.255.255.2 255.255.255.255
+exit
+
+interface GigabitEthernet0/1
+description R-EDGE-Link
+ip address 10.255.0.2 255.255.255.252
+no shutdown
+exit
+
+interface GigabitEthernet0/0
+description SW-CORE-Link
+ip address 10.255.0.5 255.255.255.252
+no shutdown
+exit
+
+router ospf 1
+router-id 2.2.2.2
+network 10.255.0.0 0.0.0.3 area 0
+network 10.255.0.4 0.0.0.3 area 0
+network 10.255.255.2 0.0.0.0 area 0
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+---------------------------------------------------ACL
+
+
+enable
+configure terminal
+
+ip access-list standard ACL_MGMT_SSH
+! Permit SSH management restricted to VLAN 99
+permit 10.99.99.0 0.0.0.255
+! Default deny explicitly acknowledged
+deny any
+
+line vty 0 4
+access-class ACL_MGMT_SSH in
+exit
+do write memory
+
+
+---------------------------------------------------
+
+
+Router>enable
+Router#configure terminal
+Router(config)#hostname R-CORE
+
+R-CORE(config)#interface Loopback0
+R-CORE(config-if)#ip address 10.255.255.2 255.255.255.255
+R-CORE(config-if)#exit
+
+R-CORE(config)#interface GigabitEthernet0/1
+R-CORE(config-if)#description R-EDGE-Link
+R-CORE(config-if)#ip address 10.255.0.2 255.255.255.252
+R-CORE(config-if)#no shutdown
+R-CORE(config-if)#exit
+
+R-CORE(config)#interface GigabitEthernet0/0
+R-CORE(config-if)#description SW-CORE-Link
+R-CORE(config-if)#ip address 10.255.0.5 255.255.255.252
+R-CORE(config-if)#no shutdown
+R-CORE(config-if)#exit
+
+R-CORE(config)#router ospf 1
+R-CORE(config-router)#router-id 2.2.2.2
+R-CORE(config-router)#network 10.255.0.0 0.0.0.3 area 0
+R-CORE(config-router)#network 10.255.0.4 0.0.0.3 area 0
+R-CORE(config-router)#network 10.255.255.2 0.0.0.0 area 0
+R-CORE(config-router)#exit
+
+R-CORE(config)#username admin secret admin@1234
+R-CORE(config)#ip domain-name uor.lk
+R-CORE(config)#ip ssh version 2
+Please create RSA keys to enable SSH (and of atleast 768 bits for SSH v2).
+R-CORE(config)#crypto key generate rsa
+The name for the keys will be: R-CORE.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...
+[OK] (elapsed time was 0 seconds)
+
+R-CORE(config)#service password-encryption
+R-CORE(config)#
+R-CORE(config)#line vty 0 4
+R-CORE(config-line)#login local
+R-CORE(config-line)#exec-timeout 10
+R-CORE(config-line)#transport input ssh
+R-CORE(config-line)#exit
+R-CORE(config)#
+R-CORE(config)#exit
+R-CORE#write memory
+
+---------------------------------------------------
+
+R-CORE>enable
+R-CORE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R-CORE(config)#
+R-CORE(config)#ip access-list standard ACL_MGMT_SSH
+R-CORE(config-std-nacl)#! Permit SSH management restricted to VLAN 99
+R-CORE(config-std-nacl)#permit 10.99.99.0 0.0.0.255
+R-CORE(config-std-nacl)#! Default deny explicitly acknowledged
+R-CORE(config-std-nacl)#deny any
+R-CORE(config-std-nacl)#
+R-CORE(config-std-nacl)#line vty 0 4
+R-CORE(config-line)#access-class ACL_MGMT_SSH in
+R-CORE(config-line)#exit
+R-CORE(config)#do write memory

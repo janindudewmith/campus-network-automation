@@ -1,0 +1,270 @@
+G_SW-D-DEIE
+
+enable
+configure terminal
+hostname SW-D-DEIE
+ip routing
+
+vlan 10
+name VLAN-DEIE
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface Vlan 10
+description VLAN-DEIE
+ip helper-address 10.10.40.2
+ip address 10.10.10.1 255.255.255.0
+no shutdown
+exit
+
+interface Vlan 99
+description VLAN-MGMT
+ip address 10.99.99.11 255.255.255.0
+no shutdown
+exit
+
+interface GigabitEthernet0/1
+description SW-CORE-L3-Link
+no switchport
+ip address 10.255.0.10 255.255.255.252
+no shutdown
+exit
+
+interface GigabitEthernet0/0
+description SW-A-DEIE-Trunk
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 10,99,100
+no shutdown
+exit
+
+interface Loopback0
+ip address 4.4.4.4 255.255.255.255
+exit
+
+router ospf 1
+router-id 4.4.4.4
+network 10.255.0.8 0.0.0.3 area 0
+network 10.10.10.0 0.0.0.255 area 0
+network 10.99.99.0 0.0.0.255 area 0
+network 4.4.4.4 0.0.0.0 area 0
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+---------------------------------------------------ACL
+
+enable
+configure terminal
+
+ip access-list standard ACL_MGMT_SSH
+! Permit SSH management restricted to VLAN 99
+permit 10.99.99.0 0.0.0.255
+! Default deny explicitly acknowledged
+deny any
+
+line vty 0 4
+access-class ACL_MGMT_SSH in
+exit
+do write memory
+
+
+enable
+configure terminal
+
+ip access-list extended ACL_DEIE_IN
+! Essential Network Services
+permit udp any any eq bootps
+permit udp any any eq bootpc
+! Engineering staff have full server farm access
+permit ip 10.10.10.0 0.0.0.255 10.10.40.0 0.0.0.255
+! Explicitly block access to other internal departments
+deny ip 10.10.10.0 0.0.0.255 10.10.20.0 0.0.0.255
+deny ip 10.10.10.0 0.0.0.255 10.10.30.0 0.0.0.255
+deny ip 10.10.10.0 0.0.0.255 10.99.99.0 0.0.0.255
+! Permit Internet Egress
+permit ip 10.10.10.0 0.0.0.255 any
+! Default deny explicitly acknowledged
+deny ip any any
+
+interface Vlan 10
+ip access-group ACL_DEIE_IN in
+exit
+do write memory
+
+
+-------------------------------------------------
+
+
+
+Switch>enable
+Switch#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-D-DEIE
+SW-D-DEIE(config)#ip routing
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#vlan 10
+SW-D-DEIE(config-vlan)#name VLAN-DEIE
+SW-D-DEIE(config-vlan)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#vlan 99
+SW-D-DEIE(config-vlan)#name VLAN-MGMT
+SW-D-DEIE(config-vlan)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#vlan 100
+SW-D-DEIE(config-vlan)#name NATIVE-VLAN
+SW-D-DEIE(config-vlan)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#interface Vlan 10
+SW-D-DEIE(config-if)#description VLAN-DEIE
+SW-D-DEIE(config-if)#ip helper-address 10.10.40.2
+SW-D-DEIE(config-if)#ip address 10.10.10.1 255.255.255.0
+SW-D-DEIE(config-if)#no shutdown
+SW-D-DEIE(config-if)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#interface Vlan 99
+SW-D-DEIE(config-if)#description VLAN-MGMT
+SW-D-DEIE(config-if)#ip address 10.99.99.11 255.255.255.0
+SW-D-DEIE(config-if)#no shutdown
+SW-D-DEIE(config-if)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#interface GigabitEthernet0/1
+SW-D-DEIE(config-if)#description SW-CORE-L3-Link
+SW-D-DEIE(config-if)#no switchport
+SW-D-DEIE(config-if)#ip address 10.255.0.10 255.255.255.252
+SW-D-DEIE(config-if)#no shutdown
+SW-D-DEIE(config-if)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#interface GigabitEthernet0/0
+SW-D-DEIE(config-if)#description SW-A-DEIE-Trunk
+SW-D-DEIE(config-if)#switchport trunk encapsulation dot1q
+SW-D-DEIE(config-if)#switchport mode trunk
+SW-D-DEIE(config-if)#switchport trunk native vlan 100
+SW-D-DEIE(config-if)#switchport trunk allowed vlan 10,99,100
+SW-D-DEIE(config-if)#no shutdown
+SW-D-DEIE(config-if)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#interface Loopback0
+SW-D-DEIE(config-if)#ip address 4.4.4.4 255.255.255.255
+SW-D-DEIE(config-if)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#router ospf 1
+SW-D-DEIE(config-router)#router-id 4.4.4.4
+SW-D-DEIE(config-router)#network 10.255.0.8 0.0.0.3 area 0
+SW-D-DEIE(config-router)#network 10.10.10.0 0.0.0.255 area 0
+SW-D-DEIE(config-router)#network 10.99.99.0 0.0.0.255 area 0
+SW-D-DEIE(config-router)#network 4.4.4.4 0.0.0.0 area 0
+SW-D-DEIE(config-router)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#username admin secret admin@1234
+SW-D-DEIE(config)#ip domain-name uor.lk
+SW-D-DEIE(config)#ip ssh version 2
+Please create RSA keys to enable SSH (and of atleast 768 bits for SSH v2).
+SW-D-DEIE(config)#crypto key generate rsa
+The name for the keys will be: SW-D-DEIE.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...
+[OK] (elapsed time was 0 seconds)
+
+SW-D-DEIE(config)#service password-encryption
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#line vty 0 4
+SW-D-DEIE(config-line)#login local
+SW-D-DEIE(config-line)#exec-timeout 10
+SW-D-DEIE(config-line)#transport input ssh
+SW-D-DEIE(config-line)#exit
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#exit
+SW-D-DEIE#write memory
+*Jul 31 17:30:03.588: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan10, changed state to down
+*Jul 31 17:30:03.956: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan99, changed state to down
+*Jul 31 17:30:04.327: %SSH-5-ENABLED: SSH 2.0 has been enabled
+*Jul 31 17:30:04.431: %SYS-5-CONFIG_I: Configured from console by console
+*Jul 31 17:30:04.767: %LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback0, changed state to up
+*Jul 31 17:30:04.918: %LINK-3-UPDOWN: Interface Vlan10, changed state to down
+*Jul 31 17:30:05.058: %LINK-3-UPDOWN: Interface Vlan99, changed state to down
+*Jul 31 17:30:05.217: %LINK-3-UPDOWN: Interface GigabitEthernet0/1, changed state to up
+*Jul 31 17:30:06.218: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to up
+*Jul 31 17:30:07.648: %SPANTREE-2-RECV_PVID_ERR: Received BPDU with inconsistent peer vlan id 1 on GigabitEthernet0/0 VLAN100.
+*Jul 31 17:30:07.648: %SPANTREE-2-BLOCK_PVID_LOCAL: Blocking GigabitEthernet0/0 on VLAN0100. Inconsistent local vlan.
+*Jul 31 17:30:10.583: %OSPF-5-ADJCHG: Process 1, Nbr 3.3.3.3 on GigabitEthernet0/1 from LOADING to FULL, Loading Done
+Building configuration...
+Compressed configuration from 4007 bytes to 2228 bytes[OK]
+
+
+---------------------------------------------
+
+SW-D-DEIE>enable
+SW-D-DEIE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#ip access-list standard ACL_MGMT_SSH
+SW-D-DEIE(config-std-nacl)#! Permit SSH management restricted to VLAN 99
+SW-D-DEIE(config-std-nacl)#permit 10.99.99.0 0.0.0.255
+SW-D-DEIE(config-std-nacl)#! Default deny explicitly acknowledged
+SW-D-DEIE(config-std-nacl)#deny any
+SW-D-DEIE(config-std-nacl)#
+SW-D-DEIE(config-std-nacl)#line vty 0 4
+SW-D-DEIE(config-line)#access-class ACL_MGMT_SSH in
+SW-D-DEIE(config-line)#exit
+SW-D-DEIE(config)#do write memory
+
+
+
+SW-D-DEIE>
+SW-D-DEIE>enable
+SW-D-DEIE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#ip access-list extended ACL_DEIE_IN
+SW-D-DEIE(config-ext-nacl)#! Essential Network Services
+SW-D-DEIE(config-ext-nacl)#permit udp any any eq bootps
+SW-D-DEIE(config-ext-nacl)#permit udp any any eq bootpc
+SW-D-DEIE(config-ext-nacl)#! Engineering staff have full server farm access
+SW-D-DEIE(config-ext-nacl)#$0.10.10.0 0.0.0.255 10.10.40.0 0.0.0.255
+SW-D-DEIE(config-ext-nacl)#$y block access to other internal departments
+SW-D-DEIE(config-ext-nacl)#deny ip 10.10.10.0 0.0.0.255 10.10.20.0 0.0.0.255
+SW-D-DEIE(config-ext-nacl)#deny ip 10.10.10.0 0.0.0.255 10.10.30.0 0.0.0.255
+SW-D-DEIE(config-ext-nacl)#deny ip 10.10.10.0 0.0.0.255 10.99.99.0 0.0.0.255
+SW-D-DEIE(config-ext-nacl)#! Permit Internet Egress
+SW-D-DEIE(config-ext-nacl)#permit ip 10.10.10.0 0.0.0.255 any
+SW-D-DEIE(config-ext-nacl)#! Default deny explicitly acknowledged
+SW-D-DEIE(config-ext-nacl)#deny ip any any
+SW-D-DEIE(config-ext-nacl)#
+SW-D-DEIE(config-ext-nacl)#interface Vlan 10
+SW-D-DEIE(config-if)#ip access-group ACL_DEIE_IN in
+SW-D-DEIE(config-if)#exit
+SW-D-DEIE(config)#do write memory
+Building configuration...
+Compressed configuration from 4511 bytes to 2471 bytes[OK]
+SW-D-DEIE(config)#
+SW-D-DEIE(config)#
+
+
+

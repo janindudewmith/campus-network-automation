@@ -1,0 +1,80 @@
+VPS
+
+ip 10.10.10.10 255.255.255.0 10.10.10.1
+save
+
+ip 10.10.10.11 255.255.255.0 10.10.10.1
+save
+
+ip 10.10.20.10 255.255.255.0 10.10.20.1
+save
+
+ip 10.10.20.11 255.255.255.0 10.10.20.1
+save
+
+ip 10.10.30.10 255.255.255.0 10.10.30.1
+save
+
+ip 10.10.30.11 255.255.255.0 10.10.30.1
+save
+
+ip 10.10.40.10 255.255.255.0 10.10.40.1
+save
+
+ip 10.10.40.11 255.255.255.0 10.10.40.1
+save
+
+
+
+PC1> ip 10.10.10.10 255.255.255.0 10.10.10.1
+Checking for duplicate address...
+PC1 : 10.10.10.10 255.255.255.0 gateway 10.10.10.1
+
+PC1> save
+Saving startup configuration to startup.vpc
+.  done
+
+PC1>
+PC1>
+PC1> ping 10.10.10.1
+
+84 bytes from 10.10.10.1 icmp_seq=1 ttl=255 time=10.852 ms
+84 bytes from 10.10.10.1 icmp_seq=2 ttl=255 time=5.489 ms
+84 bytes from 10.10.10.1 icmp_seq=3 ttl=255 time=7.135 ms
+84 bytes from 10.10.10.1 icmp_seq=4 ttl=255 time=5.803 ms
+84 bytes from 10.10.10.1 icmp_seq=5 ttl=255 time=6.685 ms
+
+PC1> ping 10.10.20.10
+
+10.10.20.10 icmp_seq=1 timeout
+84 bytes from 10.10.20.10 icmp_seq=2 ttl=61 time=19.956 ms
+84 bytes from 10.10.20.10 icmp_seq=3 ttl=61 time=19.847 ms
+84 bytes from 10.10.20.10 icmp_seq=4 ttl=61 time=15.019 ms
+84 bytes from 10.10.20.10 icmp_seq=5 ttl=61 time=18.578 ms
+
+PC1> ping 10.10.40.10
+
+10.10.40.10 icmp_seq=1 timeout
+84 bytes from 10.10.40.10 icmp_seq=2 ttl=62 time=37.992 ms
+84 bytes from 10.10.40.10 icmp_seq=3 ttl=62 time=18.483 ms
+84 bytes from 10.10.40.10 icmp_seq=4 ttl=62 time=18.237 ms
+84 bytes from 10.10.40.10 icmp_seq=5 ttl=62 time=15.055 ms
+
+PC1> ping 10.255.255.1
+
+84 bytes from 10.255.255.1 icmp_seq=1 ttl=252 time=19.455 ms
+84 bytes from 10.255.255.1 icmp_seq=2 ttl=252 time=10.307 ms
+84 bytes from 10.255.255.1 icmp_seq=3 ttl=252 time=14.927 ms
+84 bytes from 10.255.255.1 icmp_seq=4 ttl=252 time=12.002 ms
+84 bytes from 10.255.255.1 icmp_seq=5 ttl=252 time=13.619 ms
+
+PC1> ping 10.10.30.11
+
+10.10.30.11 icmp_seq=1 timeout
+84 bytes from 10.10.30.11 icmp_seq=2 ttl=61 time=21.475 ms
+84 bytes from 10.10.30.11 icmp_seq=3 ttl=61 time=17.759 ms
+84 bytes from 10.10.30.11 icmp_seq=4 ttl=61 time=19.210 ms
+84 bytes from 10.10.30.11 icmp_seq=5 ttl=61 time=16.894 ms
+
+PC1>
+

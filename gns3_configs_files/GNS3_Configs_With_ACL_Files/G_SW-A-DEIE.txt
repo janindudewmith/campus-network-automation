@@ -1,0 +1,243 @@
+G_SW-A-DEIE
+
+
+enable
+configure terminal
+hostname SW-A-DEIE
+
+vlan 10
+name VLAN-DEIE
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.21 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet0/0
+description SW-D-DEIE-Trunk
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 10,99,100
+no shutdown
+exit
+
+interface GigabitEthernet0/1
+description DEIE-PC-01
+switchport mode access
+switchport access vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface GigabitEthernet0/2
+description DEIE-PC-02
+switchport mode access
+switchport access vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+
+enable
+configure terminal
+no ip default-gateway 10.99.99.1
+ip default-gateway 10.99.99.11
+exit
+write memory
+
+
+---------------------------------------------------ACL
+
+enable
+configure terminal
+
+ip access-list standard ACL_MGMT_SSH
+! Permit SSH management restricted to VLAN 99
+permit 10.99.99.0 0.0.0.255
+! Default deny explicitly acknowledged
+deny any
+
+line vty 0 4
+access-class ACL_MGMT_SSH in
+exit
+do write memory
+
+------------------------------------------------------------
+
+
+Switch>enable
+Switch#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-A-DEIE
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#vlan 10
+SW-A-DEIE(config-vlan)#name VLAN-DEIE
+SW-A-DEIE(config-vlan)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#vlan 99
+SW-A-DEIE(config-vlan)#name VLAN-MGMT
+SW-A-DEIE(config-vlan)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#vlan 100
+SW-A-DEIE(config-vlan)#name NATIVE-VLAN
+SW-A-DEIE(config-vlan)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#interface vlan 99
+SW-A-DEIE(config-if)#description VLAN-MGMT
+SW-A-DEIE(config-if)#ip address 10.99.99.21 255.255.255.0
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#ip default-gateway 10.99.99.1
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#interface GigabitEthernet0/0
+SW-A-DEIE(config-if)#description SW-D-DEIE-Trunk
+SW-A-DEIE(config-if)#switchport trunk encapsulation dot1q
+SW-A-DEIE(config-if)#switchport mode trunk
+SW-A-DEIE(config-if)#switchport trunk native vlan 100
+SW-A-DEIE(config-if)#switchport trunk allowed vlan 10,99,100
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#interface GigabitEthernet0/1
+SW-A-DEIE(config-if)#description DEIE-PC-01
+SW-A-DEIE(config-if)#switchport mode access
+SW-A-DEIE(config-if)#switchport access vlan 10
+SW-A-DEIE(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast has been configured on GigabitEthernet0/1 but will only
+ have effect when the interface is in a non-trunking mode.
+SW-A-DEIE(config-if)#spanning-tree bpduguard enable
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#interface GigabitEthernet0/2
+SW-A-DEIE(config-if)#description DEIE-PC-02
+SW-A-DEIE(config-if)#switchport mode access
+SW-A-DEIE(config-if)#switchport access vlan 10
+SW-A-DEIE(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast has been configured on GigabitEthernet0/2 but will only
+ have effect when the interface is in a non-trunking mode.
+SW-A-DEIE(config-if)#spanning-tree bpduguard enable
+SW-A-DEIE(config-if)#no shutdown
+SW-A-DEIE(config-if)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#username admin secret admin@1234
+SW-A-DEIE(config)#ip domain-name uor.lk
+SW-A-DEIE(config)#ip ssh version 2
+Please create RSA keys to enable SSH (and of atleast 768 bits for SSH v2).
+SW-A-DEIE(config)#crypto key generate rsa
+The name for the keys will be: SW-A-DEIE.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...
+[OK] (elapsed time was 0 seconds)
+
+SW-A-DEIE(config)#service password-encryption
+SW-A-DEIE(config)#
+SW-A-DEI
+*Jul 31 17:36:11.397: %SPANTREE-2-BLOCK_PVID_PEER: Blocking GigabitEthernet0/0 on VLAN0100. Inconsistent peer vlan.
+*Jul 31 17:36:12.167: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan99, changed state to up
+*Jul 31 17:36:12.467: %SSH-5-ENABLED: SSH 2.0 has been enabled
+*Jul 31 17:36:13.412: %LINK-3-UPDOWN: Interface Vlan99, changed state to upE(config)#line vty 0 4
+SW-A-DEIE(config-line)#login local
+SW-A-DEIE(config-line)#exec-timeout 10
+SW-A-DEIE(config-line)#transport input ssh
+SW-A-DEIE(config-line)#exit
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#exit
+SW-A-DEIE#write memory
+*Jul 31 17:36:15.767: %SYS-5-CONFIG_I: Configured from console by console
+Building configuration...
+Compressed configuration from 3881 bytes to 2151 bytes
+*Jul 31 17:36:22.171: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)[OK]
+SW-A-DEIE#
+SW-A-DEIE#
+SW-A-DEIE#
+SW-A-DEIE#
+*Jul 31 17:36:24.114: %GRUB-5-CONFIG_WRITING: GRUB configuration is being updated on disk. Please wait...
+*Jul 31 17:36:24.804: %GRUB-5-CONFIG_WRITTEN: GRUB configuration was written to disk successfully.
+*Jul 31 17:36:26.397: %SPANTREE-2-UNBLOCK_CONSIST_PORT: Unblocking GigabitEthernet0/0 on VLAN0100. Port consistency restored.
+SW-A-DEIE#
+SW-A-DEIE#
+SW-A-DEIE#
+
+
+SW-A-DEIE>enable
+SW-A-DEIE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-A-DEIE(config)#no ip default-gateway 10.99.99.1
+SW-A-DEIE(config)#ip default-gateway 10.99.99.11
+SW-A-DEIE(config)#exit
+SW-A-DEIE#write memory
+*Jul 31 17:56:18.806: %SYS-5-CONFIG_I: Configured from console by console
+Building configuration...
+Compressed configuration from 3882 bytes to 2155 bytes[OK]
+SW-A-DEIE#
+SW-A-DEIE#
+SW-A-DEIE#
+*Jul 31 17:56:23.043: %GRUB-5-CONFIG_WRITING: GRUB configuration is being updated on disk. Please wait...
+*Jul 31 17:56:23.737: %GRUB-5-CONFIG_WRITTEN: GRUB configuration was written to disk successfully.
+
+---------------------------------------------------
+
+SW-A-DEIE>enable
+SW-A-DEIE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-A-DEIE(config)#
+SW-A-DEIE(config)#ip access-list standard ACL_MGMT_SSH
+SW-A-DEIE(config-std-nacl)#! Permit SSH management restricted to VLAN 99
+SW-A-DEIE(config-std-nacl)#permit 10.99.99.0 0.0.0.255
+SW-A-DEIE(config-std-nacl)#! Default deny explicitly acknowledged
+SW-A-DEIE(config-std-nacl)#deny any
+SW-A-DEIE(config-std-nacl)#
+SW-A-DEIE(config-std-nacl)#line vty 0 4
+SW-A-DEIE(config-line)#access-class ACL_MGMT_SSH in
+SW-A-DEIE(config-line)#exit
+SW-A-DEIE(config)#do write memory
+
+
+

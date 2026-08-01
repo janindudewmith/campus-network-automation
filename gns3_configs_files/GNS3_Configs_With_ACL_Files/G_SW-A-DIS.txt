@@ -1,0 +1,354 @@
+G_SW-A-DIS
+
+
+enable
+configure terminal
+hostname SW-A-DIS
+
+vlan 40
+name VLAN-DIS
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.24 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet1/0
+description SW-CORE
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 40,99,100
+no shutdown
+exit
+
+interface GigabitEthernet0/1
+description DIS-PC-01
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface GigabitEthernet0/2
+description DIS-PC-02
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface GigabitEthernet0/3
+description DHCP/WEB
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface GigabitEthernet1/1
+description Auto-VM
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface GigabitEthernet1/2
+description Zabbix-VM
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+
+enable
+configure terminal
+
+! Fix DHCP/WEB Port
+interface GigabitEthernet0/3
+no spanning-tree bpduguard enable
+shutdown
+no shutdown
+exit
+
+! Fix Auto-VM Port
+interface GigabitEthernet1/1
+no spanning-tree bpduguard enable
+shutdown
+no shutdown
+exit
+
+! Preemptively fix Zabbix-VM Port
+interface GigabitEthernet1/2
+no spanning-tree bpduguard enable
+shutdown
+no shutdown
+exit
+
+do write memory
+
+
+---------------------------------------------------ACL
+
+enable
+configure terminal
+
+ip access-list standard ACL_MGMT_SSH
+! Permit SSH management restricted to VLAN 99
+permit 10.99.99.0 0.0.0.255
+! Default deny explicitly acknowledged
+deny any
+
+line vty 0 4
+access-class ACL_MGMT_SSH in
+exit
+do write memory
+
+
+
+-----------------------------
+
+
+Switch>
+Switch>enable
+Switch#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-A-DIS
+SW-A-DIS(config)#
+SW-A-DIS(config)#vlan 40
+SW-A-DIS(config-vlan)#name VLAN-DIS
+SW-A-DIS(config-vlan)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#vlan 99
+SW-A-DIS(config-vlan)#name VLAN-MGMT
+SW-A-DIS(config-vlan)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#vlan 100
+SW-A-DIS(config-vlan)#name NATIVE-VLAN
+SW-A-DIS(config-vlan)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface vlan 99
+SW-A-DIS(config-if)#description VLAN-MGMT
+SW-A-DIS(config-if)#ip address 10.99.99.24 255.255.255.0
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#ip default-gateway 10.99.99.1
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface GigabitEthernet1/0
+SW-A-DIS(config-if)#description SW-CORE
+SW-A-DIS(config-if)#switchport trunk encapsulation dot1q
+SW-A-DIS(config-if)#switchport mode trunk
+SW-A-DIS(config-if)#switchport trunk native vlan 100
+SW-A-DIS(config-if)#switchport trunk allowed vlan 40,99,100
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface GigabitEthernet0/1
+SW-A-DIS(config-if)#description DIS-PC-01
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast has been configured on GigabitEthernet0/1 but will only
+ have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface GigabitEthernet0/2
+SW-A-DIS(config-if)#description DIS-PC-02
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast has been configured on GigabitEthernet0/2 but will only
+ have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface GigabitEthernet0/3
+SW-A-DIS(config-if)#description DHCP/WEB
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast has been configured on GigabitEthernet0/3 but will only
+ have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-
+*Jul 31 18:35:42.959: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan99, changed state to up
+*Jul 31 18:35:44.186: %LINK-3-UPDOWN: Interface Vlan99, changed state to upA-DIS(config)#interface GigabitEthernet1/1
+SW-A-DIS(config-if)#description Auto-VM
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast has been configured on GigabitEthernet1/1 but will only
+ have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface GigabitEthernet1/2
+SW-A-DIS(config-if)#description Zabbix-VM
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast has been configured on GigabitEthernet1/2 but will only
+ have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#
+SW-A-DIS(config)#username admin secret admin@1234
+SW-A-DIS(config)#ip domain-name uor.lk
+SW-A-DIS(config)#ip ssh version 2
+Please create RSA keys to enable SSH (and of atleast 768 bits for SSH v2).
+SW-A-DIS(config)#crypto key generate rsa
+The name for the keys will be: SW-A-DIS.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...
+[OK] (elapsed time was 0 seconds)
+
+SW-A-DIS(config)#service password-encryption
+SW-A-DIS(config)#
+SW-A-DIS(config)#line vty 0 4
+SW-A-DIS(config-line)#login local
+SW-A-DIS(config-line)#exec-timeout 10
+SW-A-DIS(config-line)#transport input ssh
+SW-A-DIS(config-line)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#exit
+SW-A-DIS#write memory
+*Jul 31 18:35:48.593: %SPANTREE-2-BLOCK_BPDUGUARD: Received BPDU on port Gi1/1 with BPDU Guard enabled. Disabling port.
+*Jul 31 18:35:48.593: %PM-4-ERR_DISABLE: bpduguard error detected on Gi1/1, putting Gi1/1 in err-disable state
+*Jul 31 18:35:48.594: %SPANTREE-2-BLOCK_BPDUGUARD: Received BPDU on port Gi0/3 with BPDU Guard enabled. Disabling port.
+*Jul 31 18:35:48.595: %PM-4-ERR_DISABLE: bpduguard error detected on Gi0/3, putting Gi0/3 in err-disable state
+*Jul 31 18:35:48.612: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/1, changed state to down
+*Jul 31 18:35:49.140: %SSH-5-ENABLED: SSH 2.0 has been enabled
+*Jul 31 18:35:49.244: %SYS-5-CONFIG_I: Configured from console by console
+*Jul 31 18:35:49.603: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/3, changed state to down
+*Jul 31 18:35:50.594: %LINK-3-UPDOWN: Interface GigabitEthernet1/1, changed state to down
+*Jul 31 18:35:50.595: %LINK-3-UPDOWN: Interface GigabitEthernet0/3, changed state to down
+Building configuration...
+Compressed configuration from 4272 bytes to 2309 bytes[OK]
+SW-A-DIS#
+SW-A-DIS#
+*Jul 31 18:36:09.241: %GRUB-5-CONFIG_WRITING: GRUB configuration is being updated on disk. Please wait...
+*Jul 31 18:36:09.936: %GRUB-5-CONFIG_WRITTEN: GRUB configuration was written to disk successfully.
+
+SW-A-DIS#enable
+SW-A-DIS#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-A-DIS(config)#
+SW-A-DIS(config)#! Fix DHCP/WEB Port
+SW-A-DIS(config)#interface GigabitEthernet0/3
+SW-A-DIS(config-if)#no spanning-tree bpduguard enable
+SW-A-DIS(config-if)#shutdown
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#! Fix Auto-VM Port
+SW-A-DIS(config)#interface GigabitEthernet1/1
+SW-A-DIS(config-if)#no spanning-tree bpduguard enable
+SW-A-DIS(config-if)#shutdown
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#! Preemptively fix Zabbix-VM Port
+SW-A-DIS(config)#interface GigabitEthernet1/2
+SW-A-DIS(config-if)#no spanning-tree bpduguard enable
+SW-A-DIS(config-if)#shutdown
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#do write memory
+Building configuration...
+
+
+---------------------------------------------------
+
+SW-A-DIS>enable
+SW-A-DIS#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-A-DIS(config)#
+SW-A-DIS(config)#ip access-list standard ACL_MGMT_SSH
+SW-A-DIS(config-std-nacl)#! Permit SSH management restricted to VLAN 99
+SW-A-DIS(config-std-nacl)#permit 10.99.99.0 0.0.0.255
+SW-A-DIS(config-std-nacl)#! Default deny explicitly acknowledged
+SW-A-DIS(config-std-nacl)#deny any
+SW-A-DIS(config-std-nacl)#
+SW-A-DIS(config-std-nacl)#line vty 0 4
+SW-A-DIS(config-line)#access-class ACL_MGMT_SSH in
+SW-A-DIS(config-line)#exit
+SW-A-DIS(config)#do write memory
+Building configuration...
+
+

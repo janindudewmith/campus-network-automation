@@ -1,0 +1,321 @@
+G_SW-CORE
+
+enable
+configure terminal
+hostname SW-CORE
+ip routing
+
+interface GigabitEthernet0/0
+description R-CORE-Link
+no switchport
+ip address 10.255.0.6 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet0/1
+description SW-D-DEIE-Link
+no switchport
+ip address 10.255.0.9 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet0/2
+description SW-D-DCEE-Link
+no switchport
+ip address 10.255.0.13 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet0/3
+description SW-D-DMME-Link
+no switchport
+ip address 10.255.0.17 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet1/0
+description SW-A-DIS-Link
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 40,99,100
+no shutdown
+exit
+
+vlan 40
+name VLAN_DIS
+exit
+
+vlan 99
+name VLAN_MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface Vlan 40
+description VLAN-DIS
+ip helper-address 10.10.40.2
+ip address 10.10.40.1 255.255.255.0
+no shutdown
+exit
+
+interface Vlan 99
+description VLAN-MGMT
+ip address 10.99.99.1 255.255.255.0
+no shutdown
+exit
+
+interface Loopback0
+ip address 10.255.255.3 255.255.255.255
+exit
+
+router ospf 1
+router-id 3.3.3.3
+network 10.255.0.4 0.0.0.3 area 0
+network 10.255.0.8 0.0.0.3 area 0
+network 10.255.0.12 0.0.0.3 area 0
+network 10.255.0.16 0.0.0.3 area 0
+network 10.10.40.0 0.0.0.255 area 0
+network 10.99.99.0 0.0.0.255 area 0
+network 10.255.255.3 0.0.0.0 area 0
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 15
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+---------------------------------------------------ACL
+
+enable
+configure terminal
+
+ip access-list standard ACL_MGMT_SSH
+! Permit SSH management restricted to VLAN 99
+permit 10.99.99.0 0.0.0.255
+! Default deny explicitly acknowledged
+deny any
+
+line vty 0 4
+access-class ACL_MGMT_SSH in
+exit
+do write memory
+
+
+enable
+configure terminal
+
+ip access-list extended ACL_DIS_IN
+! Monitoring agent must reach all devices via SNMP (UDP 161)
+permit udp host 10.10.40.5 any eq snmp
+! Allow Server Farm to reply to permitted internal traffic
+permit ip 10.10.40.0 0.0.0.255 10.10.0.0 0.255.255.255
+permit ip 10.10.40.0 0.0.0.255 10.99.99.0 0.0.0.255
+! Default deny explicitly acknowledged
+deny ip any any
+
+interface Vlan 40
+ip access-group ACL_DIS_IN in
+exit
+do write memory
+
+-----------------------------------------------------------------------------------------
+
+
+Switch>enable
+Switch#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-CORE
+SW-CORE(config)#ip routing
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet0/0
+SW-CORE(config-if)#description R-CORE-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.6 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet0/1
+SW-CORE(config-if)#description SW-D-DEIE-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.9 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet0/2
+SW-CORE(config-if)#description SW-D-DCEE-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.13 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet0/3
+SW-CORE(config-if)#description SW-D-DMME-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.17 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet1/0
+SW-CORE(config-if)#description SW-A-DIS-Link
+SW-CORE(config-if)#switchport trunk encapsulation dot1q
+SW-CORE(config-if)#switchport mode trunk
+SW-CORE(config-if)#switchport trunk native vlan 100
+SW-CORE(config-if)#switchport trunk allowed vlan 40,99,100
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#vlan 40
+SW-CORE(config-vlan)#name VLAN_DIS
+SW-CORE(config-vlan)#exit
+SW-CORE(config)#
+SW-CORE(config)#vlan 99
+SW-CORE(config-vlan)#name VLAN_MGMT
+SW-CORE(config-vlan)#exit
+SW-CORE(config)#
+SW-CORE(config)#vlan 100
+SW-CORE(config-vlan)#name NATIVE-VLAN
+SW-CORE(config-vlan)#exit
+
+*Jul 31 17:22:17.171: %LINK-3-UPDOWN: Interface GigabitEthernet0/0, changed state to up
+*Jul 31 17:22:17.663: %LINK-3-UPDOWN: Interface GigabitEthernet0/1, changed state to up
+*Jul 31 17:22:18.054: %LINK-3-UPDOWN: Interface GigabitEthernet0/2, changed state to up
+*Jul 31 17:22:18.178: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0, changed state to up
+*Jul 31 17:22:18.458: %LINK-3-UPDOWN: Interface GigabitEthernet0/3, changed state to up
+SW-CORE(config)#
+SW-CORE(config)#interface Vlan 40
+SW-CORE(config-if)#description VLAN-DIS
+SW-CORE(config-if)#ip helper-address 10.10.40.2
+SW-CORE(config-if)#ip address 10.10.40.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#interface Vlan 99
+SW-CORE(config-if)#description VLAN-MGMT
+SW-CORE(config-if)#ip address 10.99.99.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#interface Loopback0
+SW-CORE(config-if)#ip address 10.255.255.3 255.255.255.255
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#router ospf 1
+SW-CORE(config-router)#router-id 3.3.3.3
+SW-CORE(config-router)#network 10.255.0.4 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.255.0.8 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.255.0.12 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.255.0.16 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.10.40.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.99.99.0 0.0.0.255 are
+*Jul 31 17:22:18.663: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/1, changed state to up
+*Jul 31 17:22:19.054: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/2, changed state to up
+*Jul 31 17:22:19.460: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/3, changed state to upa 0
+SW-CORE(config-router)#network 10.255.255.3 0.0.0.0 area 0
+SW-CORE(config-router)#exit
+SW-CORE(config)#
+SW-CORE(config)#username admin secret admin@1234
+SW-CORE(config)#ip domain-name uor.lk
+SW-CORE(config)#ip ssh version 2
+Please create RSA keys to enable SSH (and of atleast 768 bits for SSH v2).
+SW-CORE(config)#crypto key generate rsa
+The name for the keys will be: SW-CORE.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...
+[OK] (elapsed time was 0 seconds)
+
+SW-CORE(config)#service password-encryption
+SW-CORE(config)#
+SW-CORE(config)#line vty 0 15
+SW-CORE(config-line)#login local
+SW-CORE(config-line)#exec-timeout 10
+SW-CORE(config-line)#transport input ssh
+SW-CORE(config-line)#exit
+SW-CORE(config)#
+SW-CORE(config)#exit
+                    *Jul 31 17:22:20.082: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan40, changed state to down
+*Jul 31 17:22:20.321: %SSH-5-ENABLED: SSH 2.0 has been enabled
+*Jul 31 17:22:20.408: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan99, changed state to down
+*Jul 31 17:22:20.560: %LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback0, changed state to up
+*Jul 31 17:22:20.844: %SPANTREE-2-RECV_PVID_ERR: Received BPDU with inconsistent peer vlan id 1 on GigabitEthernet1/0 VLAN100.
+*Jul 31 17:22:20.844: %SPANTREE-2-BLOCK_PVID_LOCAL: Blocking GigabitEthernet1/0 on VLAN0100. Inconsistent local vlan.
+*Jul 31 17:22:21.371: %LINK-3-UPDOWN: Interface Vlan40, changed state to down
+*Jul 31 17:22:21.516: %LINK-3-UPDOWN: Interface Vlan99, changed state to down
+
+SW-CORE#write memory
+
+---------------------------------------------------
+
+
+SW-CORE>enable
+SW-CORE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-CORE(config)#
+SW-CORE(config)#ip access-list standard ACL_MGMT_SSH
+SW-CORE(config-std-nacl)#! Permit SSH management restricted to VLAN 99
+SW-CORE(config-std-nacl)#permit 10.99.99.0 0.0.0.255
+SW-CORE(config-std-nacl)#! Default deny explicitly acknowledged
+SW-CORE(config-std-nacl)#deny any
+SW-CORE(config-std-nacl)#
+SW-CORE(config-std-nacl)#line vty 0 4
+SW-CORE(config-line)#access-class ACL_MGMT_SSH in
+SW-CORE(config-line)#exit
+SW-CORE(config)#do write memory
+Building configuration...
+
+
+SW-CORE>enable
+SW-CORE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-CORE(config)#
+SW-CORE(config)#ip access-list extended ACL_DIS_IN
+SW-CORE(config-ext-nacl)#$g agent must reach all devices via SNMP (UDP 161)
+SW-CORE(config-ext-nacl)#permit udp host 10.10.40.5 any eq snmp
+SW-CORE(config-ext-nacl)#$ver Farm to reply to permitted internal traffic
+SW-CORE(config-ext-nacl)#$0.10.40.0 0.0.0.255 10.10.0.0 0.255.255.255
+SW-CORE(config-ext-nacl)#permit ip 10.10.40.0 0.0.0.255 10.99.99.0 0.0.0.255
+SW-CORE(config-ext-nacl)#! Default deny explicitly acknowledged
+SW-CORE(config-ext-nacl)#deny ip any any
+SW-CORE(config-ext-nacl)#
+SW-CORE(config-ext-nacl)#interface Vlan 40
+SW-CORE(config-if)#ip access-group ACL_DIS_IN in
+SW-CORE(config-if)#exit
+SW-CORE(config)#do write memory
+Building configuration...
+Compressed configuration from 4751 bytes to 2594 bytes[OK]
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#
+*Aug  1 04:29:17.069: %GRUB-5-CONFIG_WRITING: GRUB configuration is being updated on disk. Please wait...
+*Aug  1 04:29:17.800: %GRUB-5-CONFIG_WRITTEN: GRUB configuration was written to disk successfully.
+
+
+
+
+
+
