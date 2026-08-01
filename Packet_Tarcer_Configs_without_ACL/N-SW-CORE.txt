@@ -5,7 +5,7 @@ Switch#configure terminal
 Switch(config)#hostname SW-CORE
 
 SW-CORE(config)#ip routing
-SW-CORE(config)#interface GigabitEthernet 1/0/1
+SW-CORE(config)#interface Gigabit Ethernet 1/0/1
 SW-CORE(config-if)#description R-CORE-Link
 SW-CORE(config-if)#no switchport
 SW-CORE(config-if)#ip address 10.255.0.6 255.255.255.252
@@ -279,4 +279,289 @@ write memory
 
 security password min-length 10
 login block-for 600 attempts 3 within 60
+
+------------------------------------------------
+------------------------------------------------
+
+enable
+configure terminal
+hostname SW-CORE
+ip routing
+
+interface GigabitEthernet 1/0/1
+description R-CORE-Link
+no switchport
+ip address 10.255.0.6 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet 1/0/2
+description SW-D-DEIE-Link
+no switchport
+ip address 10.255.0.9 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet 1/0/3
+description SW-D-DCEE-Link
+no switchport
+ip address 10.255.0.13 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet 1/0/4
+description SW-D-DMME-Link
+no switchport
+ip address 10.255.0.17 255.255.255.252
+no shutdown
+exit
+
+
+interface GigabitEthernet 1/0/5
+description SW-A-DIS-Link
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 40,99,100
+no shutdown
+exit
+
+vlan 40
+name VLAN_DIS
+exit
+
+vlan 99
+name VLAN_MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface Vlan 40
+description VLAN-DIS
+ip helper-address 10.10.40.2
+ip address 10.10.40.1 255.255.255.0
+no shutdown
+exit
+
+interface Vlan 99
+description VLAN-MGMT
+ip address 10.99.99.1 255.255.255.0
+no shutdown
+exit
+
+interface Loopback0
+ip address 10.255.255.3 255.255.255.255
+exit
+
+router ospf 1
+router-id 3.3.3.3
+network 10.255.0.4 0.0.0.3 area 0
+network 10.255.0.8 0.0.0.3 area 0
+network 10.255.0.12 0.0.0.3 area 0
+network 10.255.0.16 0.0.0.3 area 0
+network 10.10.40.0 0.0.0.255 area 0
+network 10.99.99.0 0.0.0.255 area 0
+network 10.255.255.3 0.0.0.0 area 0
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 15
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+-----------------------------------------------------------------------
+
+
+Switch>enable
+Switch#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-CORE
+SW-CORE(config)#ip routing
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet 1/0/1
+SW-CORE(config-if)#description R-CORE-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.6 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet 1/0/2
+SW-CORE(config-if)#description SW-D-DEIE-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.9 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet 1/0/3
+SW-CORE(config-if)#description SW-D-DCEE-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.13 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet 1/0/4
+SW-CORE(config-if)#description SW-D-DMME-Link
+SW-CORE(config-if)#no switchport
+SW-CORE(config-if)#ip address 10.255.0.17 255.255.255.252
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#
+SW-CORE(config)#interface GigabitEthernet 1/0/5
+SW-CORE(config-if)#description SW-A-DIS-Link
+SW-CORE(config-if)#switchport trunk encapsulation dot1q
+                                    ^
+% Invalid input detected at '^' marker.
+	
+SW-CORE(config-if)#switchport mode trunk
+
+SW-CORE(config-if)#switchport trunk native vlan 100
+SW-CORE(config-if)#switchport trunk allowed vlan 40,99,100
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#vlan 40
+SW-CORE(config-vlan)#name VLAN_DIS
+SW-CORE(config-vlan)#exit
+SW-CORE(config)#
+SW-CORE(config)#vlan 99
+SW-CORE(config-vlan)#name VLAN_MGMT
+SW-CORE(config-vlan)#exit
+SW-CORE(config)#
+SW-CORE(config)#vlan 100
+SW-CORE(config-vlan)#name NATIVE-VLAN
+SW-CORE(config-vlan)#exit
+SW-CORE(config)#
+SW-CORE(config)#interface Vlan 40
+SW-CORE(config-if)#description VLAN-DIS
+SW-CORE(config-if)#ip helper-address 10.10.40.2
+SW-CORE(config-if)#ip address 10.10.40.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#interface Vlan 99
+SW-CORE(config-if)#description VLAN-MGMT
+SW-CORE(config-if)#ip address 10.99.99.1 255.255.255.0
+SW-CORE(config-if)#no shutdown
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#interface Loopback0
+
+SW-CORE(config-if)#ip address 10.255.255.3 255.255.255.255
+SW-CORE(config-if)#exit
+SW-CORE(config)#
+SW-CORE(config)#router ospf 1
+SW-CORE(config-router)#router-id 3.3.3.3
+SW-CORE(config-router)#network 10.255.0.4 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.255.0.8 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.255.0.12 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.255.0.16 0.0.0.3 area 0
+SW-CORE(config-router)#network 10.10.40.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.99.99.0 0.0.0.255 area 0
+SW-CORE(config-router)#network 10.255.255.3 0.0.0.0 area 0
+SW-CORE(config-router)#exit
+SW-CORE(config)#
+SW-CORE(config)#username admin secret admin@1234
+SW-CORE(config)#ip domain-name uor.lk
+SW-CORE(config)#ip ssh version 2
+Please create RSA keys (of at least 768 bits size) to enable SSH v2.
+SW-CORE(config)#crypto key generate rsa
+The name for the keys will be: SW-CORE.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]
+
+SW-CORE(config)#service password-encryption
+*Mar 1 0:2:15.765: %SSH-5-ENABLED: SSH 2 has been enabled
+SW-CORE(config)#
+SW-CORE(config)#line vty 0 15
+SW-CORE(config-line)#login local
+SW-CORE(config-line)#exec-timeout 10
+SW-CORE(config-line)#transport input ssh
+SW-CORE(config-line)#exit
+SW-CORE(config)#
+SW-CORE(config)#exit
+SW-CORE#write memory
+Building configuration...
+Compressed configuration from 7383 bytes to 3601 bytes[OK]
+[OK]
+SW-CORE#
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/1, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/1, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/2, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/2, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/5, changed state to down
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1/0/5, changed state to up
+
+%LINK-5-CHANGED: Interface Vlan40, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan40, changed state to up
+
+%LINK-5-CHANGED: Interface Vlan99, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan99, changed state to up
+
+%LINK-5-CHANGED: Interface Loopback0, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback0, changed state to up
+
+%SYS-5-CONFIG_I: Configured from console by console
+
+SW-CORE#
+SW-CORE#
+SW-CORE#
+
+-----------------------------
+
+SW-CORE>enable
+SW-CORE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW-CORE(config)#
+SW-CORE(config)#ip access-list extended ACL_SSH_MGMT
+SW-CORE(config-ext-nacl)#permit tcp 10.99.99.0 0.0.0.255 any eq 22
+SW-CORE(config-ext-nacl)#deny tcp any any eq 22
+SW-CORE(config-ext-nacl)#permit ip any any
+SW-CORE(config-ext-nacl)#exit
+SW-CORE(config)#
+SW-CORE(config)#line vty 0 15
+SW-CORE(config-line)#access-class ACL_SSH_MGMT in
+SW-CORE(config-line)#exit
+SW-CORE(config)#exit
+SW-CORE#
+SW-CORE#write memory 
+%SYS-5-CONFIG_I: Configured from console by console
+
+Building configuration...
+Compressed configuration from 7383 bytes to 3601 bytes[OK]
+[OK]
+SW-CORE#
+SW-CORE#
+
 

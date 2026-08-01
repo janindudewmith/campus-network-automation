@@ -88,3 +88,31 @@ exit
 
 exit
 write memory
+
+--------------------------------------------
+
+
+R-CORE>enable
+R-CORE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R-CORE(config)#
+R-CORE(config)#ip access-list extended ACL_SSH_MGMT
+R-CORE(config-ext-nacl)#permit tcp 10.99.99.0 0.0.0.255 any eq 22
+R-CORE(config-ext-nacl)#deny tcp any any eq 22
+R-CORE(config-ext-nacl)#permit ip any any
+R-CORE(config-ext-nacl)#exit
+R-CORE(config)#
+R-CORE(config)#line vty 0 15
+R-CORE(config-line)#access-class ACL_SSH_MGMT in
+R-CORE(config-line)#exit
+R-CORE(config)#exit
+R-CORE#
+R-CORE#write memory 
+Building configuration...
+[OK]
+R-CORE#
+%SYS-5-CONFIG_I: Configured from console by console
+
+R-CORE#
+R-CORE#
+R-CORE#

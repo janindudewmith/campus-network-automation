@@ -174,3 +174,233 @@ exit
 
 exit
 write memory
+
+---------------------------------------------------
+---------------------------------------------------
+
+enable
+configure terminal
+hostname SW-A-DIS
+
+vlan 40
+name VLAN-DIS
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.24 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet 0/1
+description SW-CORE
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 40,99,100
+no shutdown
+exit
+
+interface fastEthernet 0/1
+description DIS-PC-01
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/2
+description DIS-PC-02
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/3
+description DHCP/WEB
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/4
+description DNS
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+---------------------------------------------------
+
+Switch>enable
+Switch#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-A-DIS
+SW-A-DIS(config)#
+SW-A-DIS(config)#vlan 40
+SW-A-DIS(config-vlan)#name VLAN-DIS
+SW-A-DIS(config-vlan)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#vlan 99
+SW-A-DIS(config-vlan)#name VLAN-MGMT
+SW-A-DIS(config-vlan)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#vlan 100
+SW-A-DIS(config-vlan)#name NATIVE-VLAN
+SW-A-DIS(config-vlan)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface vlan 99
+SW-A-DIS(config-if)#description VLAN-MGMT
+SW-A-DIS(config-if)#ip address 10.99.99.24 255.255.255.0
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#ip default-gateway 10.99.99.1
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface GigabitEthernet 0/1
+SW-A-DIS(config-if)#description SW-CORE
+SW-A-DIS(config-if)#switchport trunk encapsulation dot1q
+                                     ^
+% Invalid input detected at '^' marker.
+	
+SW-A-DIS(config-if)#switchport mode trunk
+SW-A-DIS(config-if)#switchport trunk native vlan 100
+SW-A-DIS(config-if)#switchport trunk allowed vlan 40,99,100
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface fastEthernet 0/1
+SW-A-DIS(config-if)#description DIS-PC-01
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/1 but will only
+have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface fastEthernet 0/2
+SW-A-DIS(config-if)#description DIS-PC-02
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/2 but will only
+have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface fastEthernet 0/3
+SW-A-DIS(config-if)#description DHCP/WEB
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/3 but will only
+have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#interface fastEthernet 0/4
+SW-A-DIS(config-if)#description DNS
+SW-A-DIS(config-if)#switchport mode access
+SW-A-DIS(config-if)#switchport access vlan 40
+SW-A-DIS(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/4 but will only
+have effect when the interface is in a non-trunking mode.
+SW-A-DIS(config-if)#spanning-tree bpduguard enable
+SW-A-DIS(config-if)#no shutdown
+SW-A-DIS(config-if)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#username admin secret admin@1234
+SW-A-DIS(config)#ip domain-name uor.lk
+SW-A-DIS(config)#ip ssh version 2
+Please create RSA keys (of at least 768 bits size) to enable SSH v2.
+SW-A-DIS(config)#crypto key generate rsa
+The name for the keys will be: SW-A-DIS.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]
+
+SW-A-DIS(config)#service password-encryption
+*Mar 1 2:29:16.763: %SSH-5-ENABLED: SSH 2 has been enabled
+SW-A-DIS(config)#
+SW-A-DIS(config)#line vty 0 4
+SW-A-DIS(config-line)#login local
+SW-A-DIS(config-line)#exec-timeout 10
+SW-A-DIS(config-line)#transport input ssh
+SW-A-DIS(config-line)#exit
+SW-A-DIS(config)#
+SW-A-DIS(config)#exit
+SW-A-DIS#write memory
+Building configuration...
+[OK]
+SW-A-DIS#
+%LINK-5-CHANGED: Interface Vlan99, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan99, changed state to up
+
+%SYS-5-CONFIG_I: Configured from console by console
+
+SW-A-DIS#
+SW-A-DIS#
+SW-A-DIS#
+SW-A-DIS#
+SW-A-DIS#

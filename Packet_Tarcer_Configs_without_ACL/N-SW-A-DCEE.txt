@@ -137,5 +137,180 @@ exit
 exit
 write memory
 
+-----------------------------------------------------------
+-----------------------------------------------------------
 
+enable
+configure terminal
+hostname SW-A-DCEE
+
+vlan 20
+name VLAN-DCEE
+exit
+
+vlan 99
+name VLAN-MGMT
+exit
+
+vlan 100
+name NATIVE-VLAN
+exit
+
+interface vlan 99
+description VLAN-MGMT
+ip address 10.99.99.22 255.255.255.0
+no shutdown
+exit
+
+ip default-gateway 10.99.99.1
+
+interface GigabitEthernet 0/1
+description SW-D-DCEE-Trunk
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk native vlan 100
+switchport trunk allowed vlan 20,99,100
+no shutdown
+exit
+
+interface fastEthernet 0/1
+description DCEE-PC-01
+switchport mode access
+switchport access vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+interface fastEthernet 0/2
+description DCEE-PC-02
+switchport mode access
+switchport access vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+no shutdown
+exit
+
+username admin secret admin@1234
+ip domain-name uor.lk
+ip ssh version 2
+crypto key generate rsa
+1024
+service password-encryption
+
+line vty 0 4
+login local
+exec-timeout 10
+transport input ssh
+exit
+
+exit
+write memory
+
+-----------------------------------------
+
+Switch>enable
+Switch#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#hostname SW-A-DCEE
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#vlan 20
+SW-A-DCEE(config-vlan)#name VLAN-DCEE
+SW-A-DCEE(config-vlan)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#vlan 99
+SW-A-DCEE(config-vlan)#name VLAN-MGMT
+SW-A-DCEE(config-vlan)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#vlan 100
+SW-A-DCEE(config-vlan)#name NATIVE-VLAN
+SW-A-DCEE(config-vlan)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#interface vlan 99
+SW-A-DCEE(config-if)#description VLAN-MGMT
+SW-A-DCEE(config-if)#ip address 10.99.99.22 255.255.255.0
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#ip default-gateway 10.99.99.1
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#interface GigabitEthernet 0/1
+SW-A-DCEE(config-if)#description SW-D-DCEE-Trunk
+SW-A-DCEE(config-if)#switchport trunk encapsulation dot1q
+                                      ^
+% Invalid input detected at '^' marker.
+	
+SW-A-DCEE(config-if)#switchport mode trunk
+SW-A-DCEE(config-if)#switchport trunk native vlan 100
+SW-A-DCEE(config-if)#switchport trunk allowed vlan 20,99,100
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#interface fastEthernet 0/1
+SW-A-DCEE(config-if)#description DCEE-PC-01
+SW-A-DCEE(config-if)#switchport mode access
+SW-A-DCEE(config-if)#switchport access vlan 20
+SW-A-DCEE(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/1 but will only
+have effect when the interface is in a non-trunking mode.
+SW-A-DCEE(config-if)#spanning-tree bpduguard enable
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#interface fastEthernet 0/2
+SW-A-DCEE(config-if)#description DCEE-PC-02
+SW-A-DCEE(config-if)#switchport mode access
+SW-A-DCEE(config-if)#switchport access vlan 20
+SW-A-DCEE(config-if)#spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+host. Connecting hubs, concentrators, switches, bridges, etc... to this
+interface  when portfast is enabled, can cause temporary bridging loops.
+Use with CAUTION
+
+%Portfast has been configured on FastEthernet0/2 but will only
+have effect when the interface is in a non-trunking mode.
+SW-A-DCEE(config-if)#spanning-tree bpduguard enable
+SW-A-DCEE(config-if)#no shutdown
+SW-A-DCEE(config-if)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#username admin secret admin@1234
+SW-A-DCEE(config)#ip domain-name uor.lk
+SW-A-DCEE(config)#ip ssh version 2
+Please create RSA keys (of at least 768 bits size) to enable SSH v2.
+SW-A-DCEE(config)#crypto key generate rsa
+The name for the keys will be: SW-A-DCEE.uor.lk
+Choose the size of the key modulus in the range of 360 to 4096 for your
+  General Purpose Keys. Choosing a key modulus greater than 512 may take
+  a few minutes.
+
+How many bits in the modulus [512]: 1024
+% Generating 1024 bit RSA keys, keys will be non-exportable...[OK]
+
+SW-A-DCEE(config)#service password-encryption
+*Mar 1 2:17:5.428: %SSH-5-ENABLED: SSH 2 has been enabled
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#line vty 0 4
+SW-A-DCEE(config-line)#login local
+SW-A-DCEE(config-line)#exec-timeout 10
+SW-A-DCEE(config-line)#transport input ssh
+SW-A-DCEE(config-line)#exit
+SW-A-DCEE(config)#
+SW-A-DCEE(config)#exit
+SW-A-DCEE#write memory
+%LINK-5-CHANGED: Interface Vlan99, changed state to up
+
+%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan99, changed state to up
+
+%SYS-5-CONFIG_I: Configured from console by console
+
+Building configuration...
+[OK]
+SW-A-DCEE#
+SW-A-DCEE#
+SW-A-DCEE#
 

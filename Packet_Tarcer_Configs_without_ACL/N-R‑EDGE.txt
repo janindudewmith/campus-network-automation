@@ -122,3 +122,35 @@ exit
 
 exit
 write memory
+
+----------------------------------------------------
+
+
+R-EDGE>enable
+R-EDGE#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R-EDGE(config)#
+R-EDGE(config)#ip access-list extended ACL_SSH_MGMT
+R-EDGE(config-ext-nacl)#permit tcp 10.99.99.0 0.0.0.255 any eq 22
+R-EDGE(config-ext-nacl)#deny tcp any any eq 22
+R-EDGE(config-ext-nacl)#permit ip any any
+R-EDGE(config-ext-nacl)#exit
+R-EDGE(config)#
+R-EDGE(config)#line vty 0 15
+R-EDGE(config-line)#access-class ACL_SSH_MGMT in
+R-EDGE(config-line)#exit
+R-EDGE(config)#exit
+R-EDGE#
+%SYS-5-CONFIG_I: Configured from console by console
+
+R-EDGE#write me
+R-EDGE#write memory 
+Building configuration...
+[OK]
+R-EDGE#
+
+
+
+
+
+
