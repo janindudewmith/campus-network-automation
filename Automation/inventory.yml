@@ -1,0 +1,325 @@
+---
+routers:
+  - hostname: R-CORE
+    device_type: cisco_ios
+    host: 10.255.255.2
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-CORE.yml
+
+  - hostname: R-EDGE
+    device_type: cisco_ios
+    host: 10.255.255.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-EDGE.yml
+
+switches:
+  - hostname: SW-CORE
+    device_type: cisco_ios
+    host: 10.99.99.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.11
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.12
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DMME
+    device_type: cisco_ios
+    host: 10.99.99.13
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.21
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.22
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DMME
+    device_type: cisco_ios
+    host: 10.99.99.23
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DIS
+    device_type: cisco_ios
+    host: 10.99.99.24
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml1~---
+routers:
+  - hostname: R-CORE
+    device_type: cisco_ios
+    host: 10.255.255.2
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-CORE.yml
+
+  - hostname: R-EDGE
+    device_type: cisco_ios
+    host: 10.255.255.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-EDGE.yml
+
+switches:
+  - hostname: SW-CORE
+    device_type: cisco_ios
+    host: 10.99.99.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.11
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.12
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DMME
+    device_type: cisco_ios
+    host: 10.99.99.13
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.21
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.22
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DMME
+    device_type: cisco_ios
+    host: 10.99.99.23
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DIS
+    device_type: cisco_ios
+    host: 10.99.99.24
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml1~---
+routers:
+  - hostname: R-CORE
+    device_type: cisco_ios
+    host: 10.255.255.2
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-CORE.yml
+
+  - hostname: R-EDGE
+    device_type: cisco_ios
+    host: 10.255.255.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-EDGE.yml
+
+switches:
+  - hostname: SW-CORE
+    device_type: cisco_ios
+    host: 10.99.99.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.11
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.12
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DMME
+    device_type: cisco_ios
+    host: 10.99.99.13
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.21
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.22
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DMME
+    device_type: cisco_ios
+    host: 10.99.99.23
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DIS
+    device_type: cisco_ios
+    host: 10.99.99.24
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml1~---
+routers:
+  - hostname: R-CORE
+    device_type: cisco_ios
+    host: 10.255.255.2
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-CORE.yml
+
+  - hostname: R-EDGE
+    device_type: cisco_ios
+    host: 10.255.255.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_R-EDGE.yml
+
+switches:
+  - hostname: SW-CORE
+    device_type: cisco_ios
+    host: 10.99.99.1
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.11
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.12
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-D-DMME
+    device_type: cisco_ios
+    host: 10.99.99.13
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DEIE
+    device_type: cisco_ios
+    host: 10.99.99.21
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DCEE
+    device_type: cisco_ios
+    host: 10.99.99.22
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DMME
+    device_type: cisco_ios
+    host: 10.99.99.23
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
+
+  - hostname: SW-A-DIS
+    device_type: cisco_ios
+    host: 10.99.99.24
+    username: admin
+    password: admin@1234
+    secret: admin@1234
+    config_file: config_SNMP.yml
