@@ -1,0 +1,27 @@
+[core]
+SW-CORE ansible_host=10.99.99.1
+
+[distribution]
+SW-D-DEIE ansible_host=10.99.100.1
+SW-D-DCEE ansible_host=10.99.101.1
+SW-D-DMME ansible_host=10.99.102.1
+
+[access]
+SW-A-DEIE ansible_host=10.99.100.21
+SW-A-DCEE ansible_host=10.99.101.22
+SW-A-DMME ansible_host=10.99.102.23
+SW-A-DIS ansible_host=10.99.99.24
+
+[switches:children]
+core
+distribution
+access
+
+[switches:vars]
+ansible_connection=network_cli
+ansible_network_os=ios
+ansible_user=admin
+ansible_password=admin@1234
+ansible_become=yes
+ansible_become_method=enable
+ansible_become_password=admin@1234

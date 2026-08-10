@@ -1,0 +1,6 @@
+---
+- name: Configure Global Spanning Tree Protocol
+  cisco.ios.ios_config:
+    lines:
+      - "spanning-tree mode {{ stp_mode }}"
+      - "spanning-tree extend system-id"

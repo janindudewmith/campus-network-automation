@@ -1,0 +1,14 @@
+---
+vlans:
+  - { vlan_id: 30, name: VLAN-DMME }
+  - { vlan_id: 99, name: VLAN-MGMT }
+  - { vlan_id: 100, name: NATIVE-VLAN }
+
+l2_trunks:
+  - name: GigabitEthernet0/0
+    native_vlan: 100
+    allowed_vlans: "30,99,100"
+
+l2_access:
+  - { name: GigabitEthernet0/1, access_vlan: 30 }
+  - { name: GigabitEthernet0/2, access_vlan: 30 }

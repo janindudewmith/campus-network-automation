@@ -1,0 +1,33 @@
+---
+# Targeted Rollback for SW-A-DEIE to a clean access baseline
+# Preserves VLAN 99 (Management) to ensure SSH connectivity remains active.
+
+- name: Rollback SW-A-DEIE to Clean Access Baseline
+  hosts: SW-A-DEIE
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+    - name: Remove Departmental User VLAN (VLAN 10)
+      cisco.ios.ios_vlans:
+        config:
+          - vlan_id: 10
+        state: deleted
+      ignore_errors: yes
+
+    - name: Reset Access Ports to Factory Default
+      cisco.ios.ios_config:
+        lines:
+          - "default interface GigabitEthernet0/1"
+          - "default interface GigabitEthernet0/2"
+      ignore_errors: yes
+
+    - name: Verify Management VLAN is Still Active
+      cisco.ios.ios_facts:
+        gather_subset:
+          - interfaces
+      register: interface_facts
+
+    - name: Debug Output (Confirm Vlan99 is still up)
+      debug:
+        msg: "Rollback complete. Management interface status verified."

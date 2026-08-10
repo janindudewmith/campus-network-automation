@@ -1,0 +1,17 @@
+---
+vlans:
+  - { vlan_id: 40, name: VLAN-DIS }
+  - { vlan_id: 99, name: VLAN-MGMT }
+  - { vlan_id: 100, name: NATIVE-VLAN }
+
+l2_trunks:
+  - name: GigabitEthernet1/0
+    native_vlan: 100
+    allowed_vlans: "40,99,100"
+
+l2_access:
+  - { name: GigabitEthernet0/1, access_vlan: 40 }
+  - { name: GigabitEthernet0/2, access_vlan: 40 }
+  - { name: GigabitEthernet0/3, access_vlan: 40 }
+  - { name: GigabitEthernet1/1, access_vlan: 99 } # Auto-VM
+  - { name: GigabitEthernet1/2, access_vlan: 99 } # Zabbix-VM

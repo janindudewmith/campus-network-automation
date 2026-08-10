@@ -1,0 +1,12 @@
+---
+- name: Configure L2 Trunk Interfaces
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        trunk:
+          native_vlan: "{{ item.native_vlan | default(omit) }}"
+          allowed_vlans: "{{ item.allowed_vlans | default(omit) }}"
+        mode: trunk
+    state: merged
+  loop: "{{ l2_trunks }}"
+  when: l2_trunks is defined

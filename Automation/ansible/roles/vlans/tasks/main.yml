@@ -1,0 +1,6 @@
+---
+- name: Ensure VLANs are configured using Resource Module
+  cisco.ios.ios_vlans:
+    config: "{{ vlans }}"
+    state: merged
+  when: vlans is defined

@@ -1,0 +1,15 @@
+---
+- name: Orchestrate Campus Network Switch Configuration
+  hosts: switches
+  gather_facts: no
+  connection: network_cli
+
+  roles:
+    - role: vlans
+      tags: vlans
+    - role: trunking
+      tags: trunking
+    - role: access_ports
+      tags: access
+    - role: stp
+      tags: stp
