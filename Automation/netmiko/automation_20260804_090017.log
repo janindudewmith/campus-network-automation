@@ -1,0 +1,6 @@
+
+[2026-08-04 09:00:17.217437] Connecting to R-CORE (10.255.255.2)...
+ERROR on R-CORE: BaseConnection.__init__() got an unexpected keyword argument 'hostname'
+
+[2026-08-04 09:00:17.217579] Connecting to R-EDGE (10.255.255.1)...
+ERROR on R-EDGE: BaseConnection.__init__() got an unexpected keyword argument 'hostname'

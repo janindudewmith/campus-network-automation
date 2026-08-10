@@ -1,0 +1,6 @@
+
+[2026-08-04 09:16:27.648680] Connecting to R-CORE (10.255.255.2)...
+ERROR on R-CORE: Failed to enter configuration mode.
+
+[2026-08-04 09:16:29.274345] Connecting to R-EDGE (10.255.255.1)...
+ERROR on R-EDGE: Failed to enter configuration mode.

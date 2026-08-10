@@ -1,0 +1,6 @@
+
+[2026-08-04 09:31:51.584930] Connecting to R-CORE (10.255.255.2)...
+ERROR on R-CORE: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
+
+[2026-08-04 09:31:53.088228] Connecting to R-EDGE (10.255.255.1)...
+ERROR on R-EDGE: Failed to enter enable mode. Please ensure you pass the 'secret' argument to ConnectHandler.
